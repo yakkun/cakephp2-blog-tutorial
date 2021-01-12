@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 8000:80
+    environment:
+      TZ: "Asia/Tokyo"
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: blogtutorial-development
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+volumes:
+  db-data:
+    external: false
